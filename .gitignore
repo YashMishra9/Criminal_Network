@@ -21,6 +21,7 @@ frontend/next-env.d.ts
 frontend/.env.local
 frontend/.env.production.local
 frontend/audit_out.json
+frontend/tsconfig.tsbuildinfo
 
 # OS
 .DS_Store
