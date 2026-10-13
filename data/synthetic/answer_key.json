@@ -1,0 +1,335 @@
+{
+  "_comment": "Answer key for H1 synthetic dataset. Lists expected canonical entity groupings for entity resolution (B7/H3). Each entry maps a canonical entity to the raw text mentions that should resolve to it across all source files. This is the ground truth B7's output is validated against.",
+
+  "canonical_entities": [
+    {
+      "expected_entity_id": "ent_person_rahul_sharma",
+      "entity_type": "Person",
+      "canonical_display_name": "Rahul Sharma",
+      "ground_truth_attributes": {
+        "dob": "1985-07-14",
+        "pan": "ABCPS1234D",
+        "address": "Flat 4B, Sunrise Towers, Andheri West, Mumbai"
+      },
+      "raw_mentions": [
+        { "source_file": "fir/fir_001.json",          "raw_text": "Rahul Sharma",  "field": "accused[0].name" },
+        { "source_file": "fir/fir_002.json",          "raw_text": "Rahul S.",       "field": "accused[1].name" },
+        { "source_file": "fir/fir_003.json",          "raw_text": "not directly named — referred to via transactions" },
+        { "source_file": "police_report/pr_001.json", "raw_text": "R. Sharma",      "field": "persons_of_interest[0].name" },
+        { "source_file": "police_report/pr_002.json", "raw_text": "SHARMA R",       "field": "persons_of_interest[0].name" },
+        { "source_file": "transactions/records.json", "raw_text": "R. Sharma",      "record_id": "txn_003", "field": "to_account_holder" },
+        { "source_file": "transactions/records.json", "raw_text": "Rahul Sharma",   "record_id": "txn_004", "field": "to_account_holder" },
+        { "source_file": "transactions/records.json", "raw_text": "SHARMA R",       "record_id": "txn_006", "field": "from_account_holder" },
+        { "source_file": "surveillance/records.json", "raw_text": "R. Sharma",      "record_id": "surv_001" },
+        { "source_file": "surveillance/records.json", "raw_text": "Rahul Sharma",   "record_id": "surv_003" },
+        { "source_file": "surveillance/records.json", "raw_text": "SHARMA R",       "record_id": "surv_004" }
+      ],
+      "resolution_signals": [
+        "Shared phone number 9876543210 (FIR, CDR, PR_001)",
+        "Shared vehicle MH-01-AB-1234 (FIR_001, VEH_001, PR_001, SURV_001, SURV_003)",
+        "Shared bank account HDFC-PRIV-1234 (PR_001, TXN_003, TXN_004, TXN_006)",
+        "Shared PAN ABCPS1234D (PR_002)",
+        "Name normalization: 'Rahul Sharma' ≈ 'R. Sharma' ≈ 'Rahul S.' ≈ 'SHARMA R'"
+      ]
+    },
+
+    {
+      "expected_entity_id": "ent_person_priya_mehta",
+      "entity_type": "Person",
+      "canonical_display_name": "Priya Mehta",
+      "ground_truth_attributes": {
+        "dob": "1988-11-05",
+        "address": "B-201, Sea View Apartments, Colaba, Mumbai"
+      },
+      "raw_mentions": [
+        { "source_file": "fir/fir_001.json",          "raw_text": "Priya Mehta",  "field": "accused[1].name" },
+        { "source_file": "fir/fir_003.json",          "raw_text": "Priya Mehta",  "field": "accused[0].name" },
+        { "source_file": "police_report/pr_001.json", "raw_text": "Priya M.",     "field": "persons_of_interest[0].known_associates[1]" },
+        { "source_file": "police_report/pr_002.json", "raw_text": "P. Mehta",     "field": "persons_of_interest[2].name" },
+        { "source_file": "transactions/records.json", "raw_text": "Priya Mehta",  "record_id": "txn_001", "field": "to_account_holder" },
+        { "source_file": "transactions/records.json", "raw_text": "Priya Mehta",  "record_id": "txn_002", "field": "to_account_holder" },
+        { "source_file": "transactions/records.json", "raw_text": "P. Mehta",     "record_id": "txn_004", "field": "from_account_holder" },
+        { "source_file": "surveillance/records.json", "raw_text": "Priya M.",     "record_id": "surv_002" },
+        { "source_file": "social_media/records.json", "raw_text": "Priya M.",     "record_id": "sm_002", "field": "display_name" }
+      ],
+      "resolution_signals": [
+        "Shared bank account SBI-SAVE-5678 (FIR_003, PR_001, PR_002, TXN_001, TXN_002, TXN_003, TXN_004)",
+        "Shared phone number 8765432109 (CDR records)",
+        "Name normalization: 'Priya Mehta' ≈ 'P. Mehta' ≈ 'Priya M.'",
+        "Surveillance location Hotel Blue Star 2024-02-14 corroborated by social media check-in (surv_002, sm_002)"
+      ]
+    },
+
+    {
+      "expected_entity_id": "ent_person_devendra_khanna",
+      "entity_type": "Person",
+      "canonical_display_name": "Devendra Khanna",
+      "ground_truth_attributes": {
+        "company": "Khanna Enterprises Pvt Ltd",
+        "role": "Managing Director / Director"
+      },
+      "raw_mentions": [
+        { "source_file": "fir/fir_003.json",           "raw_text": "Devendra Khanna", "field": "accused[1].name" },
+        { "source_file": "fir/fir_003.json",           "raw_text": "Dev Khanna",      "field": "accused[1].alias" },
+        { "source_file": "police_report/pr_001.json",  "raw_text": "D. Khanna",       "field": "persons_of_interest[1].name" },
+        { "source_file": "police_report/pr_002.json",  "raw_text": "Devendra Khanna", "field": "persons_of_interest[3].name" },
+        { "source_file": "surveillance/records.json",  "raw_text": "D. Khanna",       "record_id": "surv_001" },
+        { "source_file": "surveillance/records.json",  "raw_text": "Devendra Khanna", "record_id": "surv_003" },
+        { "source_file": "social_media/records.json",  "raw_text": "Devendra Khanna", "record_id": "sm_003", "field": "display_name" }
+      ],
+      "resolution_signals": [
+        "Shared phone number 9988776655 (PR_001, PR_002, CDR_002, CDR_006, CDR_007, CDR_010)",
+        "Shared company Khanna Enterprises Pvt Ltd across all sources",
+        "Name normalization: 'Devendra Khanna' ≈ 'Dev Khanna' ≈ 'D. Khanna'"
+      ]
+    },
+
+    {
+      "expected_entity_id": "ent_person_rajan_patel",
+      "entity_type": "Person",
+      "canonical_display_name": "Rajan Patel",
+      "ground_truth_attributes": {
+        "dob": "1990-03-22",
+        "address": "12, Shastri Nagar, Bandra East, Mumbai",
+        "dl": "DL-MH-2020-123456"
+      },
+      "raw_mentions": [
+        { "source_file": "fir/fir_002.json",           "raw_text": "Rajan Patel",  "field": "accused[0].name" },
+        { "source_file": "fir/fir_002.json",           "raw_text": "R. Patel",     "field": "accused[0].alias" },
+        { "source_file": "police_report/pr_002.json",  "raw_text": "Rajan Patel",  "field": "persons_of_interest[1].name" },
+        { "source_file": "vehicles/records.json",      "raw_text": "R. Patel",     "record_id": "veh_002", "field": "registered_owner" },
+        { "source_file": "transactions/records.json",  "raw_text": "Rajan Patel",  "record_id": "txn_005", "field": "from_account_holder" },
+        { "source_file": "surveillance/records.json",  "raw_text": "Rajan Patel",  "record_id": "surv_002" }
+      ],
+      "resolution_signals": [
+        "Shared vehicle DL-05-CD-5678 (FIR_002, VEH_002, SURV_002)",
+        "Shared phone number 9123456789 (FIR_002, CDR_004, CDR_008)",
+        "Name normalization: 'Rajan Patel' ≈ 'R. Patel'"
+      ]
+    },
+
+    {
+      "expected_entity_id": "ent_org_khanna_enterprises",
+      "entity_type": "Organization",
+      "canonical_display_name": "Khanna Enterprises Pvt Ltd",
+      "ground_truth_attributes": {
+        "cin": "U74999MH2018PTC123456",
+        "address": "Office 1201, Express Towers, Nariman Point, Mumbai 400021"
+      },
+      "raw_mentions": [
+        { "source_file": "fir/fir_001.json",           "raw_text": "Khanna Enterprises Pvt Ltd" },
+        { "source_file": "fir/fir_003.json",           "raw_text": "Khanna Enterprises" },
+        { "source_file": "police_report/pr_001.json",  "raw_text": "Khanna Enterprises Pvt Ltd" },
+        { "source_file": "police_report/pr_002.json",  "raw_text": "Khanna Enterprises Pvt Ltd" },
+        { "source_file": "transactions/records.json",  "raw_text": "Khanna Enterprises Pvt Ltd", "record_id": "txn_001" },
+        { "source_file": "transactions/records.json",  "raw_text": "Khanna Enterprises",          "record_id": "txn_002" },
+        { "source_file": "vehicles/records.json",      "raw_text": "Khanna Enterprises Pvt Ltd", "record_id": "veh_003" },
+        { "source_file": "social_media/records.json",  "raw_text": "Khanna Enterprises Pvt Ltd", "record_id": "pr_report_001" },
+        { "source_file": "social_media/records.json",  "raw_text": "Khanna Enterprises Pvt Ltd", "record_id": "sm_003" }
+      ],
+      "resolution_signals": [
+        "Shared bank account SBI-CORP-9012 across sources",
+        "Shared CIN U74999MH2018PTC123456 (PR_002)",
+        "Name normalization: 'Khanna Enterprises Pvt Ltd' ≈ 'Khanna Enterprises'"
+      ]
+    },
+
+    {
+      "expected_entity_id": "ent_phone_9876543210",
+      "entity_type": "Phone",
+      "canonical_display_name": "+919876543210",
+      "raw_mentions": [
+        { "source_file": "fir/fir_001.json",           "raw_text": "9876543210" },
+        { "source_file": "police_report/pr_001.json",  "raw_text": "9876543210" },
+        { "source_file": "cdr/records.json",           "raw_text": "9876543210",  "records": ["cdr_001","cdr_003","cdr_004","cdr_006","cdr_007","cdr_010"], "fields": ["caller","callee"] }
+      ],
+      "resolution_signals": ["Phone number normalization to E.164 +919876543210"]
+    },
+
+    {
+      "expected_entity_id": "ent_phone_9988776655",
+      "entity_type": "Phone",
+      "canonical_display_name": "+919988776655",
+      "raw_mentions": [
+        { "source_file": "police_report/pr_001.json",  "raw_text": "9988776655" },
+        { "source_file": "police_report/pr_002.json",  "raw_text": "9988776655" },
+        { "source_file": "cdr/records.json",           "raw_text": "9988776655", "records": ["cdr_002","cdr_005","cdr_006","cdr_007","cdr_010"] }
+      ],
+      "resolution_signals": ["Phone number normalization to E.164 +919988776655"]
+    },
+
+    {
+      "expected_entity_id": "ent_phone_8765432109",
+      "entity_type": "Phone",
+      "canonical_display_name": "+918765432109",
+      "raw_mentions": [
+        { "source_file": "cdr/records.json", "raw_text": "8765432109", "records": ["cdr_003","cdr_005","cdr_009"] }
+      ],
+      "resolution_signals": ["Phone number normalization to E.164 +918765432109; associated with Priya Mehta via CDR"]
+    },
+
+    {
+      "expected_entity_id": "ent_phone_9123456789",
+      "entity_type": "Phone",
+      "canonical_display_name": "+919123456789",
+      "raw_mentions": [
+        { "source_file": "fir/fir_002.json",  "raw_text": "9123456789" },
+        { "source_file": "cdr/records.json",  "raw_text": "9123456789", "records": ["cdr_004","cdr_008","cdr_009"] }
+      ],
+      "resolution_signals": ["Phone number normalization to E.164 +919123456789; associated with Rajan Patel via FIR_002"]
+    },
+
+    {
+      "expected_entity_id": "ent_vehicle_mh01ab1234",
+      "entity_type": "Vehicle",
+      "canonical_display_name": "MH-01-AB-1234",
+      "raw_mentions": [
+        { "source_file": "fir/fir_001.json",           "raw_text": "MH-01-AB-1234" },
+        { "source_file": "police_report/pr_001.json",  "raw_text": "MH-01-AB-1234" },
+        { "source_file": "police_report/pr_002.json",  "raw_text": "MH-01-AB-1234" },
+        { "source_file": "vehicles/records.json",      "raw_text": "MH-01-AB-1234", "record_id": "veh_001" },
+        { "source_file": "surveillance/records.json",  "raw_text": "MH-01-AB-1234", "records": ["surv_001","surv_003"] }
+      ],
+      "resolution_signals": ["Exact plate match across sources"]
+    },
+
+    {
+      "expected_entity_id": "ent_vehicle_dl05cd5678",
+      "entity_type": "Vehicle",
+      "canonical_display_name": "DL-05-CD-5678",
+      "raw_mentions": [
+        { "source_file": "fir/fir_002.json",          "raw_text": "DL-05-CD-5678" },
+        { "source_file": "police_report/pr_002.json", "raw_text": "DL-05-CD-5678" },
+        { "source_file": "vehicles/records.json",     "raw_text": "DL-05-CD-5678", "record_id": "veh_002" },
+        { "source_file": "surveillance/records.json", "raw_text": "DL-05-CD-5678", "record_id": "surv_002" }
+      ],
+      "resolution_signals": ["Exact plate match across sources"]
+    },
+
+    {
+      "expected_entity_id": "ent_bankacct_hdfc_priv_1234",
+      "entity_type": "BankAccount",
+      "canonical_display_name": "HDFC-PRIV-1234",
+      "raw_mentions": [
+        { "source_file": "police_report/pr_001.json",  "raw_text": "HDFC-PRIV-1234" },
+        { "source_file": "transactions/records.json",  "raw_text": "HDFC-PRIV-1234", "records": ["txn_003","txn_004","txn_005","txn_006"] }
+      ],
+      "resolution_signals": ["Exact account ID match; linked to Rahul Sharma via PR_001 and TXN_004"]
+    },
+
+    {
+      "expected_entity_id": "ent_bankacct_sbi_save_5678",
+      "entity_type": "BankAccount",
+      "canonical_display_name": "SBI-SAVE-5678",
+      "raw_mentions": [
+        { "source_file": "fir/fir_003.json",          "raw_text": "SBI-SAVE-5678" },
+        { "source_file": "police_report/pr_001.json", "raw_text": "SBI-SAVE-5678" },
+        { "source_file": "transactions/records.json", "raw_text": "SBI-SAVE-5678", "records": ["txn_001","txn_002","txn_003","txn_004"] }
+      ],
+      "resolution_signals": ["Exact account ID match; linked to Priya Mehta via FIR_003 and PR_002"]
+    },
+
+    {
+      "expected_entity_id": "ent_bankacct_sbi_corp_9012",
+      "entity_type": "BankAccount",
+      "canonical_display_name": "SBI-CORP-9012",
+      "raw_mentions": [
+        { "source_file": "fir/fir_001.json",          "raw_text": "SBI-CORP-9012" },
+        { "source_file": "fir/fir_003.json",          "raw_text": "SBI-CORP-9012" },
+        { "source_file": "transactions/records.json", "raw_text": "SBI-CORP-9012", "records": ["txn_001","txn_002"] }
+      ],
+      "resolution_signals": ["Exact account ID match; linked to Khanna Enterprises via FIR_001 and TXN_001"]
+    },
+
+    {
+      "expected_entity_id": "ent_location_hotel_sunrise",
+      "entity_type": "Location",
+      "canonical_display_name": "Hotel Sunrise, Andheri West, Mumbai",
+      "raw_mentions": [
+        { "source_file": "police_report/pr_001.json",  "raw_text": "Hotel Sunrise, Andheri" },
+        { "source_file": "surveillance/records.json",  "raw_text": "Hotel Sunrise, Link Road, Andheri West, Mumbai", "record_id": "surv_001" }
+      ],
+      "resolution_signals": ["Name normalization + location coordinates match"]
+    },
+
+    {
+      "expected_entity_id": "ent_location_hotel_blue_star",
+      "entity_type": "Location",
+      "canonical_display_name": "Hotel Blue Star, Bandra West, Mumbai",
+      "raw_mentions": [
+        { "source_file": "police_report/pr_002.json",  "raw_text": "Hotel Blue Star Bandra" },
+        { "source_file": "surveillance/records.json",  "raw_text": "Hotel Blue Star, Hill Road, Bandra West, Mumbai", "record_id": "surv_002" },
+        { "source_file": "social_media/records.json",  "raw_text": "Hotel Blue Star, Bandra, Mumbai", "record_id": "sm_002", "field": "location_tag" }
+      ],
+      "resolution_signals": ["Name normalization; social media check-in corroborates surveillance record on same date 2024-02-14"]
+    },
+
+    {
+      "expected_entity_id": "ent_org_global_trading_fze",
+      "entity_type": "Organization",
+      "canonical_display_name": "Global Trading FZE",
+      "raw_mentions": [
+        { "source_file": "transactions/records.json", "raw_text": "Global Trading FZE", "record_id": "txn_006", "field": "to_account_holder" },
+        { "source_file": "social_media/records.json", "raw_text": "Global Trading FZE",  "record_id": "pr_report_001" }
+      ],
+      "resolution_signals": ["Exact name match; linked to Khanna Enterprises via social media MoU announcement and TXN_006"]
+    }
+  ],
+
+  "expected_relationships": [
+    { "from": "ent_person_rahul_sharma",     "type": "CALLED",          "to": "ent_person_devendra_khanna",  "evidence": ["cdr_001","cdr_002","cdr_006","cdr_007","cdr_010"],  "note": "High-frequency calls Jan-Mar 2024" },
+    { "from": "ent_person_rahul_sharma",     "type": "CALLED",          "to": "ent_person_priya_mehta",      "evidence": ["cdr_003"],                                          "note": "Jan 2024 call" },
+    { "from": "ent_person_rahul_sharma",     "type": "CALLED",          "to": "ent_person_rajan_patel",      "evidence": ["cdr_004","cdr_008"],                                "note": "Coordination calls" },
+    { "from": "ent_person_priya_mehta",      "type": "CALLED",          "to": "ent_person_devendra_khanna",  "evidence": ["cdr_005"],                                          "note": "Jan 2024 call" },
+    { "from": "ent_person_priya_mehta",      "type": "CALLED",          "to": "ent_person_rajan_patel",      "evidence": ["cdr_009"],                                          "note": "Feb 2024 call" },
+    { "from": "ent_person_rahul_sharma",     "type": "OWNS",            "to": "ent_vehicle_mh01ab1234",      "evidence": ["veh_001","fir_001"],                                "note": "Registered owner" },
+    { "from": "ent_person_rajan_patel",      "type": "OWNS",            "to": "ent_vehicle_dl05cd5678",      "evidence": ["veh_002","fir_002"],                                "note": "Registered owner (alias R. Patel)" },
+    { "from": "ent_person_rahul_sharma",     "type": "OWNS",            "to": "ent_bankacct_hdfc_priv_1234", "evidence": ["pr_001","txn_004"],                                 "note": "Account linked via police report and transactions" },
+    { "from": "ent_person_priya_mehta",      "type": "OWNS",            "to": "ent_bankacct_sbi_save_5678",  "evidence": ["fir_003","txn_001"],                                "note": "Account linked via FIR" },
+    { "from": "ent_person_devendra_khanna",  "type": "WORKS_FOR",       "to": "ent_org_khanna_enterprises",  "evidence": ["fir_003","pr_001","sm_003"],                        "note": "Director / Managing Director" },
+    { "from": "ent_org_khanna_enterprises",  "type": "OWNS",            "to": "ent_bankacct_sbi_corp_9012",  "evidence": ["fir_001","txn_001"],                                "note": "Corporate account" },
+    { "from": "ent_org_khanna_enterprises",  "type": "TRANSFERRED",     "to": "ent_bankacct_sbi_save_5678",  "evidence": ["txn_001","txn_002"],                                "note": "INR 11.2L in two transfers Jan 2024" },
+    { "from": "ent_person_priya_mehta",      "type": "TRANSFERRED",     "to": "ent_bankacct_hdfc_priv_1234", "evidence": ["txn_003","txn_004"],                                "note": "INR 6.5L to Rahul Sharma Jan–Feb 2024" },
+    { "from": "ent_person_rajan_patel",      "type": "TRANSFERRED",     "to": "ent_bankacct_hdfc_priv_1234", "evidence": ["txn_005"],                                          "note": "Cash deposit INR 5.5L Feb 2024" },
+    { "from": "ent_person_rahul_sharma",     "type": "TRANSFERRED",     "to": "ent_org_global_trading_fze",  "evidence": ["txn_006"],                                          "note": "Wire transfer INR 9L Mar 2024" },
+    { "from": "ent_person_rahul_sharma",     "type": "MET",             "to": "ent_person_devendra_khanna",  "evidence": ["surv_001","surv_003"],                              "note": "Physical meetings Hotel Sunrise Jan 2024 and Nariman Point Mar 2024" },
+    { "from": "ent_person_priya_mehta",      "type": "MET",             "to": "ent_person_rajan_patel",      "evidence": ["surv_002"],                                          "note": "Hotel Blue Star Bandra Feb 2024; envelope handover" },
+    { "from": "ent_person_rahul_sharma",     "type": "VISITED",         "to": "ent_location_hotel_sunrise",  "evidence": ["surv_001","pr_001"],                                "note": "Jan 2024 meeting" },
+    { "from": "ent_person_devendra_khanna",  "type": "VISITED",         "to": "ent_location_hotel_sunrise",  "evidence": ["surv_001"],                                          "note": "Jan 2024 meeting" },
+    { "from": "ent_person_priya_mehta",      "type": "VISITED",         "to": "ent_location_hotel_blue_star","evidence": ["surv_002","sm_002"],                                "note": "Feb 2024; corroborated by social media post" },
+    { "from": "ent_org_khanna_enterprises",  "type": "ASSOCIATED_WITH", "to": "ent_org_global_trading_fze",  "evidence": ["pr_report_001","txn_006"],                          "note": "MoU announced Jan 2024; TXN_006 wire transfer Mar 2024" }
+  ],
+
+  "intentional_messiness_summary": [
+    {
+      "alias_group": "Rahul Sharma",
+      "variants": ["Rahul Sharma", "R. Sharma", "Rahul S.", "SHARMA R"],
+      "sources": ["fir_001", "fir_002", "pr_001", "pr_002", "txn_003", "txn_004", "txn_006", "surv_001", "surv_003", "surv_004"],
+      "resolution_keys": ["Phone 9876543210", "Vehicle MH-01-AB-1234", "Account HDFC-PRIV-1234", "PAN ABCPS1234D"]
+    },
+    {
+      "alias_group": "Priya Mehta",
+      "variants": ["Priya Mehta", "P. Mehta", "Priya M."],
+      "sources": ["fir_001", "fir_003", "pr_001", "pr_002", "txn_001", "txn_004", "surv_002", "sm_002"],
+      "resolution_keys": ["Account SBI-SAVE-5678", "Phone 8765432109"]
+    },
+    {
+      "alias_group": "Devendra Khanna",
+      "variants": ["Devendra Khanna", "Dev Khanna", "D. Khanna"],
+      "sources": ["fir_003", "pr_001", "pr_002", "surv_001", "surv_003", "sm_003"],
+      "resolution_keys": ["Phone 9988776655", "Company Khanna Enterprises Pvt Ltd"]
+    },
+    {
+      "alias_group": "Rajan Patel",
+      "variants": ["Rajan Patel", "R. Patel"],
+      "sources": ["fir_002", "pr_002", "veh_002", "txn_005", "surv_002"],
+      "resolution_keys": ["Vehicle DL-05-CD-5678", "Phone 9123456789", "DOB 1990-03-22"]
+    },
+    {
+      "alias_group": "Khanna Enterprises Pvt Ltd",
+      "variants": ["Khanna Enterprises Pvt Ltd", "Khanna Enterprises"],
+      "sources": ["fir_001", "fir_003", "pr_001", "pr_002", "txn_001", "txn_002", "veh_003", "pr_report_001", "sm_003"],
+      "resolution_keys": ["Account SBI-CORP-9012", "CIN U74999MH2018PTC123456"]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+[
+  {
+    "record_id": "txn_001",
+    "occurred_at": "2024-01-10T13:00:00Z",
+    "payload": {
+      "transaction_id": "TXN20240110KE9012SB5678",
+      "from_account": "SBI-CORP-9012",
+      "from_account_holder": "Khanna Enterprises Pvt Ltd",
+      "to_account": "SBI-SAVE-5678",
+      "to_account_holder": "Priya Mehta",
+      "amount": 800000,
+      "currency": "INR",
+      "transaction_type": "NEFT",
+      "narration": "Service charges Q4 2023",
+      "bank": "State Bank of India"
+    },
+    "payload_text": "TXN20240110KE9012SB5678 NEFT 2024-01-10 from SBI-CORP-9012 Khanna Enterprises Pvt Ltd to SBI-SAVE-5678 Priya Mehta INR 800000 narration Service charges Q4 2023"
+  },
+  {
+    "record_id": "txn_002",
+    "occurred_at": "2024-01-25T11:45:00Z",
+    "payload": {
+      "transaction_id": "TXN20240125KE9012SB5678",
+      "from_account": "SBI-CORP-9012",
+      "from_account_holder": "Khanna Enterprises Pvt Ltd",
+      "to_account": "SBI-SAVE-5678",
+      "to_account_holder": "Priya Mehta",
+      "amount": 320000,
+      "currency": "INR",
+      "transaction_type": "NEFT",
+      "narration": "Consultancy Jan 2024",
+      "bank": "State Bank of India"
+    },
+    "payload_text": "TXN20240125KE9012SB5678 NEFT 2024-01-25 from SBI-CORP-9012 Khanna Enterprises to SBI-SAVE-5678 Priya Mehta INR 320000 narration Consultancy Jan 2024"
+  },
+  {
+    "record_id": "txn_003",
+    "occurred_at": "2024-01-27T09:20:00Z",
+    "payload": {
+      "transaction_id": "TXN20240127SB5678HD1234",
+      "from_account": "SBI-SAVE-5678",
+      "from_account_holder": "Priya Mehta",
+      "to_account": "HDFC-PRIV-1234",
+      "to_account_holder": "R. Sharma",
+      "amount": 200000,
+      "currency": "INR",
+      "transaction_type": "IMPS",
+      "narration": "Personal transfer",
+      "bank": "State Bank of India"
+    },
+    "payload_text": "TXN20240127SB5678HD1234 IMPS 2024-01-27 from SBI-SAVE-5678 Priya Mehta to HDFC-PRIV-1234 R. Sharma INR 200000 narration Personal transfer"
+  },
+  {
+    "record_id": "txn_004",
+    "occurred_at": "2024-02-05T15:30:00Z",
+    "payload": {
+      "transaction_id": "TXN20240205SB5678HD1234",
+      "from_account": "SBI-SAVE-5678",
+      "from_account_holder": "P. Mehta",
+      "to_account": "HDFC-PRIV-1234",
+      "to_account_holder": "Rahul Sharma",
+      "amount": 450000,
+      "currency": "INR",
+      "transaction_type": "NEFT",
+      "narration": "Loan repayment",
+      "bank": "State Bank of India"
+    },
+    "payload_text": "TXN20240205SB5678HD1234 NEFT 2024-02-05 from SBI-SAVE-5678 P. Mehta to HDFC-PRIV-1234 Rahul Sharma INR 450000 narration Loan repayment"
+  },
+  {
+    "record_id": "txn_005",
+    "occurred_at": "2024-02-28T10:00:00Z",
+    "payload": {
+      "transaction_id": "TXN20240228CASH5500",
+      "from_account": "CASH",
+      "from_account_holder": "Rajan Patel",
+      "to_account": "HDFC-PRIV-1234",
+      "to_account_holder": "Rahul Sharma",
+      "amount": 550000,
+      "currency": "INR",
+      "transaction_type": "CASH_DEPOSIT",
+      "narration": "Deposit at HDFC Bandra branch counter",
+      "bank": "HDFC Bank"
+    },
+    "payload_text": "TXN20240228CASH5500 CASH_DEPOSIT 2024-02-28 from Rajan Patel cash to HDFC-PRIV-1234 Rahul Sharma INR 550000 HDFC Bandra branch counter"
+  },
+  {
+    "record_id": "txn_006",
+    "occurred_at": "2024-03-10T14:15:00Z",
+    "payload": {
+      "transaction_id": "TXN20240310HD1234INTL",
+      "from_account": "HDFC-PRIV-1234",
+      "from_account_holder": "SHARMA R",
+      "to_account": "INTL-DUBAI-7788",
+      "to_account_holder": "Global Trading FZE",
+      "amount": 900000,
+      "currency": "INR",
+      "transaction_type": "WIRE",
+      "narration": "Import advance payment",
+      "bank": "HDFC Bank"
+    },
+    "payload_text": "TXN20240310HD1234INTL WIRE 2024-03-10 from HDFC-PRIV-1234 SHARMA R to INTL-DUBAI-7788 Global Trading FZE INR 900000 narration Import advance payment"
+  }
+]

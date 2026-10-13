@@ -1,0 +1,19 @@
+{
+  "record_id": "fir_002",
+  "occurred_at": "2024-03-05T14:30:00Z",
+  "payload": {
+    "fir_number": "FIR/2024/047",
+    "police_station": "Bandra PS, Mumbai",
+    "section": "IPC 406, 420",
+    "complaint_date": "2024-03-05",
+    "complainant": "Anita Desai, Director, Desai Exports",
+    "accused": [
+      { "name": "Rajan Patel", "alias": "R. Patel", "address": "12, Shastri Nagar, Bandra East, Mumbai" },
+      { "name": "Rahul Sharma", "alias": "Rahul S.", "address": "Andheri West, Mumbai" }
+    ],
+    "description": "Complainant states that Rajan Patel acting as a courier for Rahul S., collected a cash payment of INR 5,50,000 against a false invoice number INV-2024-0312. Rajan Patel was driving vehicle DL-05-CD-5678 at the time of collection on 2024-02-28. Rajan Patel's contact: 9123456789.",
+    "witnesses": ["Kamla Prasad (security guard)"],
+    "status": "Chargesheet filed"
+  },
+  "payload_text": "FIR/2024/047 filed Bandra PS Mumbai 2024-03-05. Accused: Rajan Patel alias R. Patel (12 Shastri Nagar Bandra East Mumbai phone 9123456789), Rahul S. Complaint by Anita Desai Desai Exports. Cash collection INR 5,50,000 against false invoice INV-2024-0312 on 2024-02-28. Vehicle DL-05-CD-5678 used by Rajan Patel. Witness: Kamla Prasad. Sections: IPC 406 420."
+}

@@ -1,0 +1,33 @@
+{
+  "_comment": "Vercel configuration for the Next.js frontend (DOC2 §15). The backend is NOT deployed to Vercel — it lives on Render or Railway.",
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+
+  "env": {
+    "NEXT_PUBLIC_API_BASE_URL": "https://your-backend-url.onrender.com/api/v1"
+  },
+
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ],
+
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://your-backend-url.onrender.com/api/$1"
+    }
+  ],
+
+  "github": {
+    "autoAlias": false,
+    "autoJobCancelation": true
+  }
+}

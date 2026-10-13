@@ -1,0 +1,80 @@
+[
+  {
+    "record_id": "surv_001",
+    "occurred_at": "2024-01-28T19:05:00Z",
+    "payload": {
+      "observation_id": "SURV-2024-001",
+      "observer": "HC Mohan Das, Surveillance Unit",
+      "location": "Hotel Sunrise, Link Road, Andheri West, Mumbai",
+      "location_coordinates": { "lat": 19.1334, "lon": 72.8266 },
+      "persons_observed": [
+        { "description": "Male, approx 38-40 yrs, medium build, identified as R. Sharma from prior photo (FIR/2024/001)", "arrived": "19:05", "left": "21:30" },
+        { "description": "Male, approx 42-45 yrs, heavy build, dark jacket, identified as D. Khanna", "arrived": "19:15", "left": "21:28" }
+      ],
+      "vehicles_noted": [
+        { "plate": "MH-01-AB-1234", "parked_at": "Hotel Sunrise main parking", "type": "Grey Honda City" }
+      ],
+      "notes": "Both persons met in Hotel Sunrise lounge. D. Khanna carried a brown briefcase. Meeting lasted approximately 2 hrs 15 min. No hostile behaviour observed.",
+      "photographs_taken": true
+    },
+    "payload_text": "SURV-2024-001 observed 2024-01-28 19:05-21:30 Hotel Sunrise Link Road Andheri West Mumbai. R. Sharma (male 38-40 medium build from FIR/2024/001 photo) met D. Khanna (male 42-45 heavy build dark jacket) in hotel lounge. Vehicle MH-01-AB-1234 Grey Honda City Hotel Sunrise parking. D. Khanna brown briefcase. Meeting 2hr 15min. Photographs taken."
+  },
+  {
+    "record_id": "surv_002",
+    "occurred_at": "2024-02-14T12:30:00Z",
+    "payload": {
+      "observation_id": "SURV-2024-007",
+      "observer": "ASI Fatima Sheikh, Surveillance Unit",
+      "location": "Hotel Blue Star, Hill Road, Bandra West, Mumbai",
+      "location_coordinates": { "lat": 19.0607, "lon": 72.8362 },
+      "persons_observed": [
+        { "description": "Female, approx 35-37 yrs, identified as Priya M. from account photo", "arrived": "12:30", "left": "14:10" },
+        { "description": "Male, approx 33-35 yrs, identified as Rajan Patel from DL photo", "arrived": "12:45", "left": "14:00" }
+      ],
+      "vehicles_noted": [
+        { "plate": "DL-05-CD-5678", "parked_at": "Bandra Station Road side", "type": "White Toyota Innova" }
+      ],
+      "notes": "Priya M. handed a sealed envelope to Rajan Patel. Patel left in DL-05-CD-5678 towards Andheri direction.",
+      "photographs_taken": true
+    },
+    "payload_text": "SURV-2024-007 observed 2024-02-14 12:30-14:10 Hotel Blue Star Hill Road Bandra West Mumbai. Priya M. (female 35-37 account photo) met Rajan Patel (DL photo) at hotel. Priya M. handed sealed envelope to Rajan Patel. Patel left in DL-05-CD-5678 White Toyota Innova towards Andheri. Photographs taken."
+  },
+  {
+    "record_id": "surv_003",
+    "occurred_at": "2024-03-01T10:00:00Z",
+    "payload": {
+      "observation_id": "SURV-2024-014",
+      "observer": "HC Mohan Das, Surveillance Unit",
+      "location": "Express Towers, Nariman Point, Mumbai",
+      "location_coordinates": { "lat": 18.9255, "lon": 72.8242 },
+      "persons_observed": [
+        { "description": "Male, approx 38 yrs, identified as Rahul Sharma (confirmed PAN ABCPS1234D)", "arrived": "10:00", "left": "11:45" },
+        { "description": "Male, approx 44 yrs, Devendra Khanna entering office premises 1201", "arrived": "09:50", "left": "12:00" }
+      ],
+      "vehicles_noted": [
+        { "plate": "MH-01-AB-1234", "parked_at": "Express Towers basement P2", "type": "Grey Honda City" },
+        { "plate": "MH-02-XY-9900", "parked_at": "Express Towers basement P1", "type": "Red Maruti Swift (Khanna Enterprises)" }
+      ],
+      "notes": "Rahul Sharma entered Khanna Enterprises office (1201). Both left separately. No briefcase exchange observed.",
+      "photographs_taken": false
+    },
+    "payload_text": "SURV-2024-014 observed 2024-03-01 10:00-12:00 Express Towers Nariman Point Mumbai. Rahul Sharma (PAN ABCPS1234D male 38) met Devendra Khanna at Khanna Enterprises office 1201. Vehicle MH-01-AB-1234 Grey Honda City parking P2. MH-02-XY-9900 Red Maruti Swift Khanna Enterprises parking P1. No photographs taken."
+  },
+  {
+    "record_id": "surv_004",
+    "occurred_at": "2024-03-08T16:20:00Z",
+    "payload": {
+      "observation_id": "SURV-2024-019",
+      "observer": "ASI Fatima Sheikh, Surveillance Unit",
+      "location": "HDFC Bank ATM, Linking Road, Bandra West, Mumbai",
+      "location_coordinates": { "lat": 19.0596, "lon": 72.8357 },
+      "persons_observed": [
+        { "description": "Male, medium build, using ATM — later identified as SHARMA R from ATM camera still", "time": "16:20" }
+      ],
+      "vehicles_noted": [],
+      "notes": "SHARMA R withdrew INR 40,000 cash from HDFC ATM Linking Road Bandra at 16:20. ATM camera footage preserved.",
+      "photographs_taken": false
+    },
+    "payload_text": "SURV-2024-019 observed 2024-03-08 16:20 HDFC Bank ATM Linking Road Bandra West Mumbai. SHARMA R male medium build withdrew INR 40000 from ATM. ATM camera footage preserved."
+  }
+]

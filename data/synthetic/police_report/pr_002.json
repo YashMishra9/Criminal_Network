@@ -1,0 +1,46 @@
+{
+  "record_id": "pr_002",
+  "occurred_at": "2024-03-15T16:00:00Z",
+  "payload": {
+    "report_number": "PR/BD/2024/031",
+    "prepared_by": "Inspector Deepa Kulkarni, Bandra PS",
+    "report_date": "2024-03-15",
+    "subject": "Consolidated report — Operation Falcon",
+    "persons_of_interest": [
+      {
+        "name": "SHARMA R",
+        "dob": "1985-07-14",
+        "id_proof": "PAN ABCPS1234D",
+        "vehicles": ["MH-01-AB-1234"],
+        "bank_accounts": ["HDFC-PRIV-1234"]
+      },
+      {
+        "name": "Rajan Patel",
+        "dob": "1990-03-22",
+        "id_proof": "DL-MH-2020-123456",
+        "vehicles": ["DL-05-CD-5678"],
+        "role": "Courier / driver for Sharma"
+      },
+      {
+        "name": "P. Mehta",
+        "dob": "1988-11-05",
+        "bank_accounts": ["SBI-SAVE-5678"],
+        "relationship_to_sharma": "Accomplice — financial routing"
+      },
+      {
+        "name": "Devendra Khanna",
+        "company": "Khanna Enterprises Pvt Ltd",
+        "cin": "U74999MH2018PTC123456",
+        "bank_accounts": ["SBI-CORP-9012"],
+        "phone": "9988776655"
+      }
+    ],
+    "summary": "Intelligence confirms SHARMA R (same as Rahul Sharma / Rahul S. in prior FIRs) is the primary orchestrator. Rajan Patel acts as a field operative. P. Mehta (Priya Mehta) handles financial layering via SBI-SAVE-5678. Devendra Khanna provides the corporate cover through Khanna Enterprises. Network meets at Hotel Sunrise Andheri and Hotel Blue Star Bandra. Total traced funds: INR 26,70,000.",
+    "pattern_flags": [
+      "High call frequency: SHARMA R — Khanna 9988776655 (31 calls, Jan–Mar 2024)",
+      "Layered transfers: Khanna Enterprises → SBI-SAVE-5678 → HDFC-PRIV-1234",
+      "Multiple aliases used across complaints — same PAN ABCPS1234D"
+    ]
+  },
+  "payload_text": "PR/BD/2024/031 consolidated report Operation Falcon 2024-03-15 Inspector Deepa Kulkarni Bandra PS. SHARMA R (PAN ABCPS1234D) same as Rahul Sharma Rahul S. primary orchestrator. Vehicles MH-01-AB-1234. Bank HDFC-PRIV-1234. Rajan Patel (DL-MH-2020-123456) vehicle DL-05-CD-5678 field operative. P. Mehta Priya Mehta bank SBI-SAVE-5678. Devendra Khanna Khanna Enterprises CIN U74999MH2018PTC123456 bank SBI-CORP-9012 phone 9988776655. Total funds traced INR 26,70,000. High call frequency SHARMA R to Khanna 31 calls Jan-Mar 2024."
+}

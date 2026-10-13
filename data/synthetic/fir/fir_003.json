@@ -1,0 +1,18 @@
+{
+  "record_id": "fir_003",
+  "occurred_at": "2024-02-10T09:15:00Z",
+  "payload": {
+    "fir_number": "FIR/2024/029",
+    "police_station": "Colaba PS, Mumbai",
+    "section": "IPC 120B, 420",
+    "complaint_date": "2024-02-10",
+    "complainant": "Manager, City Bank Mumbai Branch",
+    "accused": [
+      { "name": "Priya Mehta", "alias": null, "address": "B-201, Sea View Apartments, Colaba, Mumbai" },
+      { "name": "Devendra Khanna", "alias": "Dev Khanna", "address": "Director, Khanna Enterprises Pvt Ltd, Nariman Point, Mumbai" }
+    ],
+    "description": "Bank manager reports suspicious KYC documents submitted by Priya Mehta to open savings account SBI-SAVE-5678. Documents were verified to be forged. Account was used to receive INR 8,00,000 from Khanna Enterprises (account SBI-CORP-9012) on 2024-01-10 and INR 3,20,000 on 2024-01-25. Devendra Khanna (also known as Dev Khanna) is a signatory on the Khanna Enterprises account.",
+    "status": "Under investigation"
+  },
+  "payload_text": "FIR/2024/029 filed Colaba PS Mumbai 2024-02-10. Accused: Priya Mehta (B-201 Sea View Apartments Colaba Mumbai), Devendra Khanna alias Dev Khanna (Director Khanna Enterprises Pvt Ltd Nariman Point Mumbai). Complaint: forged KYC documents SBI-SAVE-5678. Transfers received INR 8,00,000 on 2024-01-10 and INR 3,20,000 on 2024-01-25 from Khanna Enterprises SBI-CORP-9012. Sections: IPC 120B 420."
+}

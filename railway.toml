@@ -1,0 +1,42 @@
+# ============================================================================
+# Railway deployment configuration — Criminal Network Analysis System Backend
+# Platform: Railway (https://railway.app)
+# DOC2 §15: Backend deployed to Render or Railway.
+# ============================================================================
+#
+# Usage:
+#   1. Connect this repository to Railway.
+#   2. Railway detects railway.toml and builds from the Dockerfile below.
+#   3. Set the following secret environment variables via the Railway dashboard
+#      or Railway's variable references (they are NOT committed here):
+#        - NEO4J_URI       (e.g., neo4j+s://<id>.databases.neo4j.io)
+#        - NEO4J_USER      (e.g., neo4j)
+#        - NEO4J_PASSWORD  (Aura or self-hosted password)
+#        - LLM_API_KEY     (only required if LLM_PROVIDER != "mock")
+#
+# Contract Invariant 7 (DOC3): LIVE_ADAPTER_ENABLED defaults to false here.
+# ============================================================================
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "backend/Dockerfile"
+dockerContext = "backend"
+
+[deploy]
+healthcheckPath = "/docs"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+# Non-secret environment variable defaults committed here.
+# Secret values (NEO4J_PASSWORD, LLM_API_KEY) must be set in the Railway dashboard.
+[deploy.env]
+ENVIRONMENT = "production"
+DEFAULT_DATASET = "synthetic_demo"
+
+# CONTRACT INVARIANT 7 (DOC3): live adapter disabled by default.
+LIVE_ADAPTER_ENABLED = "false"
+
+LLM_PROVIDER = "mock"
+
+# Railway injects PORT automatically — uvicorn binds to it via the Dockerfile CMD.

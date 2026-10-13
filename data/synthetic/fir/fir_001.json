@@ -1,0 +1,19 @@
+{
+  "record_id": "fir_001",
+  "occurred_at": "2024-01-20T10:00:00Z",
+  "payload": {
+    "fir_number": "FIR/2024/001",
+    "police_station": "Andheri East PS, Mumbai",
+    "section": "IPC 420, 468",
+    "complaint_date": "2024-01-20",
+    "complainant": "Suresh Nair, Manager, Nair Trading Co.",
+    "accused": [
+      { "name": "Rahul Sharma", "alias": null, "address": "Flat 4B, Sunrise Towers, Andheri West, Mumbai" },
+      { "name": "Priya Mehta", "alias": null, "address": "Unknown" }
+    ],
+    "description": "Complainant alleges that accused Rahul Sharma, in collusion with Priya Mehta and Khanna Enterprises Pvt Ltd, fraudulently obtained advance payments of INR 18,00,000 for a supply contract that was never fulfilled. Contact phone of Rahul Sharma: 9876543210. Khanna Enterprises bank account SBI-CORP-9012 received a transfer of INR 8,00,000 on 2024-01-10.",
+    "vehicle_seen": "MH-01-AB-1234 (grey sedan) was seen outside complainant's office on 2024-01-15.",
+    "status": "Under investigation"
+  },
+  "payload_text": "FIR/2024/001 filed at Andheri East PS Mumbai on 2024-01-20. Accused: Rahul Sharma (Flat 4B Sunrise Towers Andheri West Mumbai phone 9876543210), Priya Mehta. Complainant: Suresh Nair Nair Trading Co. Allegation: fraud advance payment INR 18,00,000 for unfulfilled contract via Khanna Enterprises Pvt Ltd. Vehicle MH-01-AB-1234 grey sedan seen at complainant office 2024-01-15. Bank transfer INR 8,00,000 to SBI-CORP-9012 on 2024-01-10. Sections: IPC 420 468."
+}

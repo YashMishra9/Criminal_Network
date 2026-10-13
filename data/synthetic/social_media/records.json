@@ -1,0 +1,50 @@
+[
+  {
+    "record_id": "pr_report_001",
+    "occurred_at": "2024-01-30T08:00:00Z",
+    "payload": {
+      "platform": "Twitter/X (public post)",
+      "post_id": "synthetic_tweet_1001",
+      "username": "@khannaenterprises_official",
+      "display_name": "Khanna Enterprises Pvt Ltd",
+      "post_text": "Proud to announce expansion into import-export sector. Our MD Devendra Khanna signs new MoU with Global Trading FZE, Dubai. #BusinessGrowth #Exports",
+      "timestamp": "2024-01-30T08:00:00Z",
+      "likes": 12,
+      "retweets": 3,
+      "verified": false
+    },
+    "payload_text": "Twitter public post 2024-01-30 @khannaenterprises_official Khanna Enterprises Pvt Ltd: Expansion import-export MD Devendra Khanna signs MoU with Global Trading FZE Dubai. #BusinessGrowth #Exports"
+  },
+  {
+    "record_id": "sm_002",
+    "occurred_at": "2024-02-14T19:30:00Z",
+    "payload": {
+      "platform": "Facebook (public post)",
+      "post_id": "synthetic_fb_2002",
+      "username": "priya.m.official",
+      "display_name": "Priya M.",
+      "post_text": "Wonderful evening at Hotel Blue Star Bandra! Great ambiance. #Mumbai #HotelLife",
+      "timestamp": "2024-02-14T19:30:00Z",
+      "location_tag": "Hotel Blue Star, Bandra, Mumbai",
+      "likes": 45,
+      "comments": 7
+    },
+    "payload_text": "Facebook public post 2024-02-14 19:30 priya.m.official Priya M.: Wonderful evening Hotel Blue Star Bandra Mumbai. Location tag Hotel Blue Star Bandra Mumbai. #Mumbai #HotelLife"
+  },
+  {
+    "record_id": "sm_003",
+    "occurred_at": "2024-02-16T11:00:00Z",
+    "payload": {
+      "platform": "LinkedIn (public post)",
+      "post_id": "synthetic_li_3003",
+      "username": "devendra-khanna-9876",
+      "display_name": "Devendra Khanna",
+      "post_text": "Excited to share that Khanna Enterprises has facilitated over INR 2 Crore in consulting contracts in Q4 FY24. Growth is inevitable when you have the right network. Connect with us for business opportunities.",
+      "timestamp": "2024-02-16T11:00:00Z",
+      "connections": 432,
+      "company": "Khanna Enterprises Pvt Ltd",
+      "role": "Managing Director"
+    },
+    "payload_text": "LinkedIn public post 2024-02-16 devendra-khanna-9876 Devendra Khanna Managing Director Khanna Enterprises Pvt Ltd: Over INR 2 Crore consulting contracts Q4 FY24. Business opportunities network."
+  }
+]

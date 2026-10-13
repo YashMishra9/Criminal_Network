@@ -1,0 +1,61 @@
+# ============================================================================
+# Render deployment configuration — Criminal Network Analysis System Backend
+# Platform: Render (https://render.com)
+# DOC2 §15: Backend deployed to Render or Railway.
+# ============================================================================
+#
+# Usage:
+#   1. Connect this repository to Render.
+#   2. Render auto-detects render.yaml and creates the services defined below.
+#   3. Set the following secret environment variables via the Render dashboard
+#      or Render's secret groups (they are NOT committed here):
+#        - NEO4J_URI       (e.g., neo4j+s://<id>.databases.neo4j.io)
+#        - NEO4J_USER      (e.g., neo4j)
+#        - NEO4J_PASSWORD  (Aura or self-hosted password)
+#        - LLM_API_KEY     (only required if LLM_PROVIDER != "mock")
+#
+# Contract Invariant 7 (DOC3): LIVE_ADAPTER_ENABLED defaults to false here.
+# Override it in the Render dashboard only for intentional live-data demos.
+# ============================================================================
+
+services:
+  - type: web
+    name: criminal-network-backend
+    runtime: docker
+    # Dockerfile is at backend/Dockerfile
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+
+    plan: free          # upgrade to starter/standard for production
+
+    # These env vars are safe to commit — all contain non-secret defaults.
+    # Secret values (NEO4J_PASSWORD, LLM_API_KEY) must be set via dashboard.
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+
+      - key: DEFAULT_DATASET
+        value: synthetic_demo
+
+      # CONTRACT INVARIANT 7: live adapter disabled by default in all deployed configs.
+      - key: LIVE_ADAPTER_ENABLED
+        value: "false"
+
+      - key: LLM_PROVIDER
+        value: mock
+
+      # Render injects PORT automatically; uvicorn binds to it via the Dockerfile CMD.
+      # Do NOT hardcode PORT here — Render manages it.
+
+      # --- Secrets: set these via Render dashboard / secret groups ---
+      # - key: NEO4J_URI
+      #   sync: false
+      # - key: NEO4J_USER
+      #   sync: false
+      # - key: NEO4J_PASSWORD
+      #   sync: false
+      # - key: LLM_API_KEY     # only if LLM_PROVIDER != mock
+      #   sync: false
+
+    healthCheckPath: /docs        # FastAPI auto-generates /docs; upgrade to /api/v1/health when Track C is live
+    autoDeploy: true

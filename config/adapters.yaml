@@ -1,0 +1,23 @@
+# ==============================================================================
+# Source Adapter Configuration
+# Reference: DOC3 §1.2 (AdapterDescriptor), DOC3 §3 (Source Adapter Interface)
+# ==============================================================================
+
+adapters:
+  # Primary synthetic demo adapter (guaranteed demo path)
+  - adapter_id: "synthetic_v1"
+    source_type: "synthetic"
+    dataset: "synthetic_demo"
+    mode: "batch"
+    enabled: true
+    poll_interval_seconds: null
+
+  # Optional public/open live adapter (scheduled polling, non-blocking)
+  # feed_url: public, ToS-compliant RSS feed concerning organizations/public figures (DOC1 NFR6)
+  - adapter_id: "rss_public_v1"
+    source_type: "rss"
+    dataset: "live_public"
+    mode: "poll"
+    enabled: false
+    poll_interval_seconds: 300
+    feed_url: "https://feeds.bbci.co.uk/news/world/rss.xml"

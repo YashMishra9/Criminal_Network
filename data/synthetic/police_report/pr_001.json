@@ -1,0 +1,27 @@
+{
+  "record_id": "pr_001",
+  "occurred_at": "2024-02-01T11:00:00Z",
+  "payload": {
+    "report_number": "PR/AE/2024/012",
+    "prepared_by": "Sub-Inspector Vikas Rane, Andheri East PS",
+    "report_date": "2024-02-01",
+    "subject": "Progress report on FIR/2024/001",
+    "persons_of_interest": [
+      {
+        "name": "R. Sharma",
+        "phone": "9876543210",
+        "known_associates": ["D. Khanna", "Priya M."],
+        "last_seen": "Hotel Sunrise, Andheri, 2024-01-28"
+      },
+      {
+        "name": "D. Khanna",
+        "company": "Khanna Enterprises Pvt Ltd",
+        "role": "Director",
+        "phone": "9988776655"
+      }
+    ],
+    "summary": "Surveillance confirms that R. Sharma met D. Khanna at Hotel Sunrise Andheri on 2024-01-28 at approximately 19:00 hrs. R. Sharma arrived in vehicle MH-01-AB-1234. Call records obtained from service provider show R. Sharma (9876543210) made 14 calls to D. Khanna (9988776655) between 2024-01-01 and 2024-01-31. SBI account SBI-SAVE-5678 linked to Priya M. shows outward transfer of INR 2,00,000 to account HDFC-PRIV-1234 (believed to belong to R. Sharma) on 2024-01-27.",
+    "next_steps": "Obtain bank statements for HDFC-PRIV-1234. Verify vehicle ownership of MH-01-AB-1234."
+  },
+  "payload_text": "PR/AE/2024/012 prepared 2024-02-01 by SI Vikas Rane Andheri East PS. Subject: Progress on FIR/2024/001. R. Sharma phone 9876543210 met D. Khanna phone 9988776655 at Hotel Sunrise Andheri 2024-01-28 19:00. R. Sharma arrived in MH-01-AB-1234. 14 calls between R. Sharma and D. Khanna in January 2024. SBI-SAVE-5678 (Priya M.) transferred INR 2,00,000 to HDFC-PRIV-1234 (R. Sharma) on 2024-01-27. Next: bank statements for HDFC-PRIV-1234 and vehicle ownership of MH-01-AB-1234."
+}

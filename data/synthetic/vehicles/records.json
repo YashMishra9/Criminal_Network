@@ -1,0 +1,64 @@
+[
+  {
+    "record_id": "veh_001",
+    "occurred_at": "2020-06-15T00:00:00Z",
+    "payload": {
+      "registration_number": "MH-01-AB-1234",
+      "vehicle_type": "Sedan",
+      "make": "Honda",
+      "model": "City",
+      "colour": "Grey",
+      "fuel_type": "Petrol",
+      "year_of_manufacture": 2019,
+      "registered_owner": "Rahul Sharma",
+      "owner_address": "Flat 4B, Sunrise Towers, Andheri West, Mumbai 400058",
+      "owner_dob": "1985-07-14",
+      "registration_date": "2020-06-15",
+      "registration_state": "Maharashtra",
+      "chassis_number": "MAKG7JEXXXF123456",
+      "engine_number": "L15B7XXXF789"
+    },
+    "payload_text": "Vehicle registration MH-01-AB-1234 Honda City Grey Sedan 2019 owner Rahul Sharma Flat 4B Sunrise Towers Andheri West Mumbai 400058 DOB 1985-07-14 registered Maharashtra 2020-06-15 chassis MAKG7JEXXXF123456 engine L15B7XXXF789"
+  },
+  {
+    "record_id": "veh_002",
+    "occurred_at": "2021-03-20T00:00:00Z",
+    "payload": {
+      "registration_number": "DL-05-CD-5678",
+      "vehicle_type": "SUV",
+      "make": "Toyota",
+      "model": "Innova",
+      "colour": "White",
+      "fuel_type": "Diesel",
+      "year_of_manufacture": 2020,
+      "registered_owner": "R. Patel",
+      "owner_address": "12, Shastri Nagar, Bandra East, Mumbai 400051",
+      "owner_dob": "1990-03-22",
+      "registration_date": "2021-03-20",
+      "registration_state": "Delhi",
+      "chassis_number": "MBJEK8GV3L0001234",
+      "engine_number": "2GD9234567"
+    },
+    "payload_text": "Vehicle registration DL-05-CD-5678 Toyota Innova White SUV 2020 owner R. Patel 12 Shastri Nagar Bandra East Mumbai 400051 DOB 1990-03-22 registered Delhi 2021-03-20"
+  },
+  {
+    "record_id": "veh_003",
+    "occurred_at": "2023-08-10T00:00:00Z",
+    "payload": {
+      "registration_number": "MH-02-XY-9900",
+      "vehicle_type": "Hatchback",
+      "make": "Maruti Suzuki",
+      "model": "Swift",
+      "colour": "Red",
+      "fuel_type": "Petrol",
+      "year_of_manufacture": 2023,
+      "registered_owner": "Khanna Enterprises Pvt Ltd",
+      "owner_address": "Office 1201, Express Towers, Nariman Point, Mumbai 400021",
+      "registration_date": "2023-08-10",
+      "registration_state": "Maharashtra",
+      "chassis_number": "MA3EYD81S00987654",
+      "engine_number": "K10CXX987654"
+    },
+    "payload_text": "Vehicle registration MH-02-XY-9900 Maruti Swift Red Hatchback 2023 owner Khanna Enterprises Pvt Ltd Office 1201 Express Towers Nariman Point Mumbai 400021 registered Maharashtra 2023-08-10"
+  }
+]
