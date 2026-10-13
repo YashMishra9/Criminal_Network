@@ -579,7 +579,23 @@ class TestInvariant14Compliance:
 # Live integration tests (post-H3, neo4j_live guard)
 # ===========================================================================
 
+def _neo4j_reachable() -> bool:
+    """Return True only when a live Neo4j instance is reachable (matches H3 pattern)."""
+    from app.graph.connection import health_check
+    try:
+        return health_check()
+    except Exception:
+        return False
+
+
+_requires_neo4j = pytest.mark.skipif(
+    not _neo4j_reachable(),
+    reason="Neo4j not available — skipping C6 live integration tests",
+)
+
+
 @pytest.mark.neo4j_live
+@_requires_neo4j
 class TestC6LiveIntegration:
     """C6 §13: API integration tests against a seeded graph (post-H3).
 
