@@ -208,7 +208,14 @@ def test_main_app_still_has_all_routers_and_handlers():
 
     # Verify at least two router groups have stub routes responding
     c = TestClient(main_app)
+    # C6 is now implemented: /entities/search no longer returns 501.
+    # Without Neo4j it returns 503 graph_unavailable (DOC3 §13).
     r1 = c.get("/api/v1/entities/search")
-    assert r1.status_code == 501, f"Expected 501 stub, got {r1.status_code}"
+    assert r1.status_code in (200, 503), (
+        f"/entities/search should return 200 (with Neo4j) or 503 (without), "
+        f"got {r1.status_code}: {r1.text}"
+    )
+    if r1.status_code == 503:
+        assert r1.json()["error"]["type"] == "graph_unavailable"
     r2 = c.post("/api/v1/cases")
-    assert r2.status_code == 501, f"Expected 501 stub, got {r2.status_code}"
+    assert r2.status_code == 501, f"Expected 501 stub for POST /cases, got {r2.status_code}"
