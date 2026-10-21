@@ -7,12 +7,16 @@
  * This matches the DOC2 §4 SPA architecture and ensures mock mode works
  * correctly without requiring env vars to be set during `next build`.
  *
- * E2–E7 will replace the placeholder sections with real components.
+ * E2 — NetworkView (Cytoscape.js graph visualisation)
+ * E3 — EntityPanel / EvidencePanel (entity detail + evidence chain)
+ * E4 — Timeline (Network Time Machine) + AnalyticsPanel (analytics + findings)
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getGraph, getPatterns, getAnalytics, isMockMode } from "../lib/api-client";
 import type { CanonicalEntity, Relationship, Finding, AnalyticsResult } from "../lib/types";
+import Timeline from "../components/Timeline/Timeline";
+import AnalyticsPanel from "../components/AnalyticsPanel/AnalyticsPanel";
 
 interface DashboardData {
   entities: CanonicalEntity[];
@@ -21,15 +25,26 @@ interface DashboardData {
   analytics: AnalyticsResult | null;
 }
 
+const DATASET = "synthetic_demo";
+
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [graphLoading, setGraphLoading] = useState(true);
 
-  useEffect(() => {
+  // E4: as_of state drives Timeline slider and AnalyticsPanel re-fetches
+  const [asOf, setAsOf] = useState<string | null>(null);
+
+  /**
+   * Fetch graph data (entities + relationships) when asOf changes.
+   * Analytics and patterns are handled inside AnalyticsPanel (E4).
+   */
+  const fetchGraph = useCallback((currentAsOf: string | null) => {
+    setGraphLoading(true);
     Promise.all([
-      getGraph({ dataset: "synthetic_demo" }),
-      getPatterns({ dataset: "synthetic_demo" }),
-      getAnalytics({ dataset: "synthetic_demo" }),
+      getGraph({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
+      getPatterns({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
+      getAnalytics({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
     ])
       .then(([graphData, patternsData, analyticsData]) => {
         setData({
@@ -38,11 +53,27 @@ export default function DashboardPage() {
           findings: patternsData.findings,
           analytics: analyticsData,
         });
+        setError(null);
       })
       .catch((err: unknown) => {
         setError(err instanceof Error ? err.message : "Failed to load data");
-      });
+      })
+      .finally(() => setGraphLoading(false));
   }, []);
+
+  // Initial load
+  useEffect(() => {
+    fetchGraph(null);
+  }, [fetchGraph]);
+
+  /** E4: called by Timeline when slider changes — re-fetches the whole graph at new as_of. */
+  const handleAsOfChange = useCallback(
+    (newAsOf: string | null) => {
+      setAsOf(newAsOf);
+      fetchGraph(newAsOf);
+    },
+    [fetchGraph]
+  );
 
   if (error) {
     return (
@@ -71,7 +102,7 @@ export default function DashboardPage() {
           Criminal Network Analysis
         </h1>
         <p className="text-sm text-gray-400 mt-1">
-          Dataset: <span className="font-mono">synthetic_demo</span>
+          Dataset: <span className="font-mono">{DATASET}</span>
           {isMockMode() && (
             <span className="ml-2 px-2 py-0.5 rounded bg-yellow-800 text-yellow-200 text-xs">
               MOCK MODE
@@ -80,7 +111,7 @@ export default function DashboardPage() {
         </p>
       </header>
 
-      {/* Network summary — placeholder for E2 NetworkView */}
+      {/* Network summary stats */}
       <section aria-label="Network summary">
         <h2 className="text-lg font-semibold mb-3">Network</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -89,6 +120,16 @@ export default function DashboardPage() {
           <StatCard label="Findings" value={data.findings.length} />
           <StatCard label="Communities" value={communityCount} />
         </div>
+      </section>
+
+      {/* E4 — Timeline (Network Time Machine) */}
+      <section aria-label="Network Time Machine" data-testid="timeline-section">
+        <Timeline
+          relationships={data.relationships}
+          asOf={asOf}
+          onAsOfChange={handleAsOfChange}
+          loading={graphLoading}
+        />
       </section>
 
       {/* Entity list — placeholder for E3 EntityPanel */}
@@ -112,26 +153,9 @@ export default function DashboardPage() {
         </ul>
       </section>
 
-      {/* Findings — placeholder for E4 AnalyticsPanel */}
-      <section aria-label="Investigative leads">
-        <h2 className="text-lg font-semibold mb-3">Investigative Leads</h2>
-        <ul className="space-y-3">
-          {data.findings.map((finding) => (
-            <li
-              key={finding.finding_id}
-              className="rounded-lg bg-gray-800 px-4 py-3 space-y-1"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-orange-900 text-orange-200">
-                  {finding.rule_name}
-                </span>
-              </div>
-              <p className="text-sm">{finding.explanation}</p>
-              {/* Contract Invariant 5: disclaimer always present, unmodified */}
-              <p className="text-xs text-gray-400 italic">{finding.disclaimer}</p>
-            </li>
-          ))}
-        </ul>
+      {/* E4 — AnalyticsPanel (analytics + findings) */}
+      <section aria-label="Analytics and Investigative Leads" data-testid="analytics-section">
+        <AnalyticsPanel asOf={asOf} dataset={DATASET} />
       </section>
     </main>
   );
