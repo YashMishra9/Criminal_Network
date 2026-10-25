@@ -34,6 +34,7 @@ import Timeline from "../components/Timeline/Timeline";
 import AnalyticsPanel from "../components/AnalyticsPanel/AnalyticsPanel";
 import FiltersAndSearch from "../components/FiltersAndSearch/FiltersAndSearch";
 import AskTheNetwork from "../components/AskTheNetwork/AskTheNetwork";
+import CaseWorkspace from "../components/CaseWorkspace/CaseWorkspace";
 import {
   DEFAULT_FILTERS,
   type FilterState,
@@ -278,6 +279,14 @@ export default function DashboardPage() {
         data-testid="analytics-section"
       >
         <AnalyticsPanel asOf={asOf} dataset={DATASET} />
+      </section>
+
+      {/* E7 — CaseWorkspace (case creation, associations, notes, summary) */}
+      <section
+        aria-label="Case Workspace"
+        data-testid="case-workspace-section"
+      >
+        <CaseWorkspace dataset={DATASET} />
       </section>
     </main>
   );
