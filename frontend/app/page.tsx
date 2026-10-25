@@ -10,13 +10,39 @@
  * E2 — NetworkView (Cytoscape.js graph visualisation)
  * E3 — EntityPanel / EvidencePanel (entity detail + evidence chain)
  * E4 — Timeline (Network Time Machine) + AnalyticsPanel (analytics + findings)
+ * E5 — FiltersAndSearch (entity/rel/source/community/pattern filters + search)
+ *      Filter state is owned here and propagated to every dependent component
+ *      (E5.md §11): NetworkView, Timeline, and AnalyticsPanel all re-query
+ *      with the active filters when they change.
  */
 
 import { useEffect, useState, useCallback } from "react";
-import { getGraph, getPatterns, getAnalytics, isMockMode } from "../lib/api-client";
-import type { CanonicalEntity, Relationship, Finding, AnalyticsResult } from "../lib/types";
+import {
+  getGraph,
+  getPatterns,
+  getAnalytics,
+  searchEntities,
+  isMockMode,
+} from "../lib/api-client";
+import type {
+  CanonicalEntity,
+  Relationship,
+  Finding,
+  AnalyticsResult,
+} from "../lib/types";
 import Timeline from "../components/Timeline/Timeline";
 import AnalyticsPanel from "../components/AnalyticsPanel/AnalyticsPanel";
+import FiltersAndSearch from "../components/FiltersAndSearch/FiltersAndSearch";
+import {
+  DEFAULT_FILTERS,
+  type FilterState,
+  toGraphParams,
+  toSearchParams,
+} from "../state/filters";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 interface DashboardData {
   entities: CanonicalEntity[];
@@ -27,53 +53,110 @@ interface DashboardData {
 
 const DATASET = "synthetic_demo";
 
+// ---------------------------------------------------------------------------
+// Page component
+// ---------------------------------------------------------------------------
+
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [graphLoading, setGraphLoading] = useState(true);
 
-  // E4: as_of state drives Timeline slider and AnalyticsPanel re-fetches
+  // E4: as_of state from the Timeline slider
   const [asOf, setAsOf] = useState<string | null>(null);
 
+  // E5: shared filter/search state — owned here, propagated to all dependents
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+
   /**
-   * Fetch graph data (entities + relationships) when asOf changes.
-   * Analytics and patterns are handled inside AnalyticsPanel (E4).
+   * Fetch graph data (entities + relationships + analytics summary) when
+   * either asOf or filters change.  Analytics and Patterns are additionally
+   * managed inside AnalyticsPanel (which re-fetches when its `asOf` prop
+   * changes), but we also keep a summary copy here for the stats display.
+   *
+   * When a search query is active we call searchEntities to get the filtered
+   * entity list; otherwise we call getGraph.
    */
-  const fetchGraph = useCallback((currentAsOf: string | null) => {
-    setGraphLoading(true);
-    Promise.all([
-      getGraph({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
-      getPatterns({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
-      getAnalytics({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
-    ])
-      .then(([graphData, patternsData, analyticsData]) => {
-        setData({
-          entities: graphData.entities,
-          relationships: graphData.relationships,
-          findings: patternsData.findings,
-          analytics: analyticsData,
-        });
-        setError(null);
-      })
-      .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : "Failed to load data");
-      })
-      .finally(() => setGraphLoading(false));
-  }, []);
+  const fetchData = useCallback(
+    (currentAsOf: string | null, currentFilters: FilterState) => {
+      setGraphLoading(true);
+
+      const graphParams = toGraphParams(currentFilters, DATASET, currentAsOf);
+      const searchParams = toSearchParams(currentFilters, DATASET);
+
+      Promise.all([
+        // Entities: use searchEntities when q or entity_type filter is active
+        currentFilters.q || currentFilters.entity_types.length === 1
+          ? searchEntities(searchParams).then((r) => r.results)
+          : getGraph(graphParams).then((r) => r.entities),
+        getGraph(graphParams).then((r) => r.relationships),
+        getPatterns({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
+        getAnalytics({ dataset: DATASET, as_of: currentAsOf ?? undefined }),
+      ])
+        .then(([entities, relationships, patternsData, analyticsData]) => {
+          setData({
+            entities,
+            relationships,
+            findings: patternsData.findings,
+            analytics: analyticsData,
+          });
+          setError(null);
+        })
+        .catch((err: unknown) => {
+          setError(err instanceof Error ? err.message : "Failed to load data");
+        })
+        .finally(() => setGraphLoading(false));
+    },
+    []
+  );
 
   // Initial load
   useEffect(() => {
-    fetchGraph(null);
-  }, [fetchGraph]);
+    fetchData(null, DEFAULT_FILTERS);
+  }, [fetchData]);
 
-  /** E4: called by Timeline when slider changes — re-fetches the whole graph at new as_of. */
+  /** E4: Timeline change — update as_of and re-fetch */
   const handleAsOfChange = useCallback(
     (newAsOf: string | null) => {
       setAsOf(newAsOf);
-      fetchGraph(newAsOf);
+      fetchData(newAsOf, filters);
     },
-    [fetchGraph]
+    [fetchData, filters]
   );
+
+  /** E5: Filter change — update filters and re-fetch all dependents */
+  const handleFiltersChange = useCallback(
+    (newFilters: FilterState) => {
+      setFilters(newFilters);
+      fetchData(asOf, newFilters);
+    },
+    [fetchData, asOf]
+  );
+
+  // -------------------------------------------------------------------------
+  // Derived values for community/pattern filter dropdowns
+  // -------------------------------------------------------------------------
+
+  const availableCommunities: string[] = data?.analytics
+    ? [...new Set(data.analytics.communities.map((c) => c.community_id))].sort()
+    : [];
+
+  const availablePatterns: { rule_id: string; rule_name: string }[] =
+    data?.findings
+      ? [
+          ...new Map(
+            data.findings.map((f) => [f.rule_id, { rule_id: f.rule_id, rule_name: f.rule_name }])
+          ).values(),
+        ]
+      : [];
+
+  const communityCount = data?.analytics
+    ? new Set(data.analytics.communities.map((c) => c.community_id)).size
+    : 0;
+
+  // -------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------
 
   if (error) {
     return (
@@ -91,10 +174,6 @@ export default function DashboardPage() {
     );
   }
 
-  const communityCount = data.analytics
-    ? new Set(data.analytics.communities.map((c) => c.community_id)).size
-    : 0;
-
   return (
     <main className="p-6 space-y-8">
       <header>
@@ -111,6 +190,20 @@ export default function DashboardPage() {
         </p>
       </header>
 
+      {/* E5 — FiltersAndSearch (wired into shared state — propagates to all panels) */}
+      <section
+        aria-label="Filters and Search"
+        data-testid="filters-section"
+      >
+        <FiltersAndSearch
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
+          availableCommunities={availableCommunities}
+          availablePatterns={availablePatterns}
+          loading={graphLoading}
+        />
+      </section>
+
       {/* Network summary stats */}
       <section aria-label="Network summary">
         <h2 className="text-lg font-semibold mb-3">Network</h2>
@@ -123,7 +216,10 @@ export default function DashboardPage() {
       </section>
 
       {/* E4 — Timeline (Network Time Machine) */}
-      <section aria-label="Network Time Machine" data-testid="timeline-section">
+      <section
+        aria-label="Network Time Machine"
+        data-testid="timeline-section"
+      >
         <Timeline
           relationships={data.relationships}
           asOf={asOf}
@@ -132,29 +228,46 @@ export default function DashboardPage() {
         />
       </section>
 
-      {/* Entity list — placeholder for E3 EntityPanel */}
+      {/* Entity list — filtered by FiltersAndSearch */}
       <section aria-label="Entities">
-        <h2 className="text-lg font-semibold mb-3">Entities</h2>
-        <ul className="space-y-2">
-          {data.entities.map((entity) => (
-            <li
-              key={entity.entity_id}
-              className="flex items-center gap-3 rounded-lg bg-gray-800 px-4 py-2"
-            >
-              <span className="text-xs font-mono px-2 py-0.5 rounded bg-gray-700 text-gray-300">
-                {entity.entity_type}
-              </span>
-              <span className="font-medium">{entity.display_name}</span>
-              <span className="ml-auto text-xs text-gray-500 font-mono">
-                {entity.entity_id}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <h2 className="text-lg font-semibold mb-3">
+          Entities
+          {data.entities.length > 0 && (
+            <span className="ml-2 text-sm font-normal text-gray-400">
+              ({data.entities.length})
+            </span>
+          )}
+        </h2>
+        {data.entities.length === 0 ? (
+          <p className="text-slate-500 italic text-sm">
+            No entities match the current filters.
+          </p>
+        ) : (
+          <ul className="space-y-2" data-testid="entity-list">
+            {data.entities.map((entity) => (
+              <li
+                key={entity.entity_id}
+                data-testid="entity-list-item"
+                className="flex items-center gap-3 rounded-lg bg-gray-800 px-4 py-2"
+              >
+                <span className="text-xs font-mono px-2 py-0.5 rounded bg-gray-700 text-gray-300">
+                  {entity.entity_type}
+                </span>
+                <span className="font-medium">{entity.display_name}</span>
+                <span className="ml-auto text-xs text-gray-500 font-mono">
+                  {entity.entity_id}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {/* E4 — AnalyticsPanel (analytics + findings) */}
-      <section aria-label="Analytics and Investigative Leads" data-testid="analytics-section">
+      <section
+        aria-label="Analytics and Investigative Leads"
+        data-testid="analytics-section"
+      >
         <AnalyticsPanel asOf={asOf} dataset={DATASET} />
       </section>
     </main>
