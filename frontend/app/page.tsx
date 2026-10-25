@@ -33,6 +33,7 @@ import type {
 import Timeline from "../components/Timeline/Timeline";
 import AnalyticsPanel from "../components/AnalyticsPanel/AnalyticsPanel";
 import FiltersAndSearch from "../components/FiltersAndSearch/FiltersAndSearch";
+import AskTheNetwork from "../components/AskTheNetwork/AskTheNetwork";
 import {
   DEFAULT_FILTERS,
   type FilterState,
@@ -202,6 +203,14 @@ export default function DashboardPage() {
           availablePatterns={availablePatterns}
           loading={graphLoading}
         />
+      </section>
+
+      {/* E6 — AskTheNetwork (chat-style NL query, all four AskResponse variants) */}
+      <section
+        aria-label="Ask the Network"
+        data-testid="ask-section"
+      >
+        <AskTheNetwork asOf={asOf} dataset={DATASET} />
       </section>
 
       {/* Network summary stats */}

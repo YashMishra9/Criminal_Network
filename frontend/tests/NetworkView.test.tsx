@@ -168,7 +168,7 @@ describe("NetworkView — render", () => {
     const spy = vi.mocked(cytoscape.default);
     spy.mockClear();
     renderNetworkView();
-    const callArg = spy.mock.calls[0][0] as { elements: { data: Record<string, string> }[] };
+    const callArg = spy.mock.calls[0][0] as unknown as { elements: { data: Record<string, string> }[] };
     const ids = callArg.elements.map((el) => el.data.id);
     expect(ids).toContain("ent-001");
     expect(ids).toContain("ent-002");
