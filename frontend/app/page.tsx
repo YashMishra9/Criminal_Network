@@ -30,6 +30,8 @@ import type {
   Finding,
   AnalyticsResult,
 } from "../lib/types";
+import NetworkView from "../components/NetworkView/NetworkView";
+import EntityPanel from "../components/EntityPanel/EntityPanel";
 import Timeline from "../components/Timeline/Timeline";
 import AnalyticsPanel from "../components/AnalyticsPanel/AnalyticsPanel";
 import FiltersAndSearch from "../components/FiltersAndSearch/FiltersAndSearch";
@@ -69,6 +71,10 @@ export default function DashboardPage() {
 
   // E5: shared filter/search state — owned here, propagated to all dependents
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+
+  // E2/E3: entity and relationship selection — drives EntityPanel + CaseWorkspace
+  const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
+  const [selectedRelationshipId, setSelectedRelationshipId] = useState<string | null>(null);
 
   /**
    * Fetch graph data (entities + relationships + analytics summary) when
@@ -130,10 +136,26 @@ export default function DashboardPage() {
   const handleFiltersChange = useCallback(
     (newFilters: FilterState) => {
       setFilters(newFilters);
+      // Clear selection when filters change — selected entity may no longer be
+      // visible in the filtered graph (E5.md §11 consistency requirement).
+      setSelectedEntityId(null);
+      setSelectedRelationshipId(null);
       fetchData(asOf, newFilters);
     },
     [fetchData, asOf]
   );
+
+  /** E2: Node tap — select entity and clear any prior relationship selection */
+  const handleSelectEntity = useCallback((entityId: string) => {
+    setSelectedEntityId((prev) => (prev === entityId ? null : entityId));
+    setSelectedRelationshipId(null);
+  }, []);
+
+  /** E2: Edge tap — select relationship and clear any prior entity selection */
+  const handleSelectRelationship = useCallback((relationshipId: string) => {
+    setSelectedRelationshipId((prev) => (prev === relationshipId ? null : relationshipId));
+    setSelectedEntityId(null);
+  }, []);
 
   // -------------------------------------------------------------------------
   // Derived values for community/pattern filter dropdowns
@@ -155,6 +177,14 @@ export default function DashboardPage() {
   const communityCount = data?.analytics
     ? new Set(data.analytics.communities.map((c) => c.community_id)).size
     : 0;
+
+  // Derive EntityType / RelationshipType filter Sets for NetworkView (E5 → E2 wiring)
+  const entityTypeFilterSet = new Set(
+    filters.entity_types.map((t) => t)
+  ) as Parameters<typeof NetworkView>[0]["entityTypeFilter"];
+  const relationshipTypeFilterSet = new Set(
+    filters.relationship_types.map((t) => t)
+  ) as Parameters<typeof NetworkView>[0]["relationshipTypeFilter"];
 
   // -------------------------------------------------------------------------
   // Render
@@ -205,6 +235,37 @@ export default function DashboardPage() {
           loading={graphLoading}
         />
       </section>
+
+      {/* E2 — NetworkView: interactive Cytoscape.js graph (GAP-1 fix) */}
+      <section
+        aria-label="Network Graph"
+        data-testid="network-graph-section"
+      >
+        <NetworkView
+          entities={data.entities}
+          relationships={data.relationships}
+          entityTypeFilter={entityTypeFilterSet}
+          relationshipTypeFilter={relationshipTypeFilterSet}
+          onSelectEntity={handleSelectEntity}
+          onSelectRelationship={handleSelectRelationship}
+        />
+      </section>
+
+      {/* E3 — EntityPanel: entity detail + evidence, shown when an entity is selected (GAP-1 fix) */}
+      {selectedEntityId && (
+        <section
+          aria-label="Entity Details"
+          data-testid="entity-detail-section"
+        >
+          <EntityPanel
+            entityId={selectedEntityId}
+            onClose={() => {
+              setSelectedEntityId(null);
+              setSelectedRelationshipId(null);
+            }}
+          />
+        </section>
+      )}
 
       {/* E6 — AskTheNetwork (chat-style NL query, all four AskResponse variants) */}
       <section
@@ -281,12 +342,16 @@ export default function DashboardPage() {
         <AnalyticsPanel asOf={asOf} dataset={DATASET} />
       </section>
 
-      {/* E7 — CaseWorkspace (case creation, associations, notes, summary) */}
+      {/* E7 — CaseWorkspace: selection from NetworkView/EntityPanel wired in (GAP-1 fix) */}
       <section
         aria-label="Case Workspace"
         data-testid="case-workspace-section"
       >
-        <CaseWorkspace dataset={DATASET} />
+        <CaseWorkspace
+          dataset={DATASET}
+          selectedEntityId={selectedEntityId}
+          selectedRelationshipId={selectedRelationshipId}
+        />
       </section>
     </main>
   );

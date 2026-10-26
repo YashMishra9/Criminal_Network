@@ -12,8 +12,81 @@
  * These tests run entirely in mock mode — no backend or Neo4j required.
  */
 
-import { describe, it, expect } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+
+// ---------------------------------------------------------------------------
+// Cytoscape mock — NetworkView is now mounted in DashboardPage; Cytoscape is
+// browser-only and cannot run in jsdom, so we stub it with a minimal mock
+// that captures tap handlers and lets tests simulate node/edge clicks.
+// ---------------------------------------------------------------------------
+
+type TapHandler = (evt: { target: unknown }) => void;
+
+let _cytoscapeTapHandlers: Record<string, TapHandler[]> = {};
+let _cytoscapeInstance: {
+  fireTap: (selector: "node" | "edge" | "background", id?: string) => void;
+} | null = null;
+
+vi.mock("cytoscape", () => ({
+  default: vi.fn((opts: { elements: { data: Record<string, string> }[] }) => {
+    _cytoscapeTapHandlers = {};
+    const store = (opts.elements ?? []).map((el: { data: Record<string, string> }) => ({
+      data: el.data,
+      classes: new Set<string>(),
+    }));
+
+    const makeEl = (item: { data: Record<string, string>; classes: Set<string> }) => ({
+      data: (k: string) => item.data[k],
+      id: () => item.data.id,
+      hasClass: (c: string) => item.classes.has(c),
+      addClass: (c: string) => item.classes.add(c),
+      removeClass: (c: string) => item.classes.delete(c),
+      source: () => ({ hasClass: () => false }),
+      target: () => ({ hasClass: () => false }),
+    });
+
+    const makeCollection = (items: typeof store) => ({
+      forEach: (fn: (el: ReturnType<typeof makeEl>) => void) =>
+        items.forEach((item) => fn(makeEl(item))),
+      addClass: () => {},
+      removeClass: () => {},
+      remove: vi.fn(),
+      unselect: vi.fn(),
+      select: vi.fn(),
+    });
+
+    const cy = {
+      on: vi.fn((event: string, selectorOrHandler: string | TapHandler, handler?: TapHandler) => {
+        const key = handler ? `${event}:${selectorOrHandler}` : event;
+        const fn = handler ?? (selectorOrHandler as TapHandler);
+        if (!_cytoscapeTapHandlers[key]) _cytoscapeTapHandlers[key] = [];
+        _cytoscapeTapHandlers[key].push(fn);
+      }),
+      elements: vi.fn(() => makeCollection(store)),
+      nodes: vi.fn(() => makeCollection(store.filter((e) => !e.data.source))),
+      edges: vi.fn(() => makeCollection(store.filter((e) => !!e.data.source))),
+      add: vi.fn(),
+      layout: vi.fn(() => ({ run: vi.fn() })),
+      getElementById: vi.fn((id: string) => makeEl(store.find((e) => e.data.id === id) ?? { data: { id }, classes: new Set() })),
+      destroy: vi.fn(),
+      unselect: vi.fn(),
+    };
+
+    _cytoscapeInstance = {
+      fireTap(selector, id) {
+        const key = id ? `tap:${selector}` : "tap";
+        const handlers = _cytoscapeTapHandlers[key] ?? [];
+        const target = id
+          ? makeEl(store.find((e) => e.data.id === id) ?? { data: { id: id ?? "" }, classes: new Set() })
+          : cy;
+        handlers.forEach((h) => h({ target }));
+      },
+    };
+
+    return cy;
+  }),
+}));
 import {
   isMockMode,
   searchEntities,
@@ -502,6 +575,180 @@ describe("DashboardPage render", () => {
       );
       // One disclaimer per finding — 2 mock findings
       expect(disclaimers.length).toBe(2);
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Dashboard integration — GAP-1 fix: NetworkView, EntityPanel, selection wiring
+// ---------------------------------------------------------------------------
+
+describe("DashboardPage — GAP-1 integration: NetworkView + EntityPanel + CaseWorkspace", () => {
+  it("renders the network graph section after data loads", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId("network-graph-section")).toBeInTheDocument();
+    });
+  });
+
+  it("renders NetworkView canvas inside the network graph section", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => {
+      expect(screen.getByTestId("network-view")).toBeInTheDocument();
+    });
+  });
+
+  it("EntityPanel is NOT shown before any entity is selected", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+    expect(screen.queryByTestId("entity-panel")).not.toBeInTheDocument();
+  });
+
+  it("selecting an entity by tapping a NetworkView node opens EntityPanel", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    // Simulate a node tap via the Cytoscape mock
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+
+    await waitFor(() => {
+      expect(screen.getByTestId("entity-panel")).toBeInTheDocument();
+    });
+  });
+
+  it("EntityPanel shows entity details for the selected entity", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+
+    // Step 1: wait for the panel itself to mount
+    await waitFor(() => {
+      expect(screen.getByTestId("entity-panel")).toBeInTheDocument();
+    });
+
+    // Step 2: now the panel is present, confirm it shows the entity's display_name
+    // getEntity("ent-001") → MOCK_ENTITIES[0] = Rahul Sharma
+    // We query *within* the entity-panel to disambiguate from the entity list row
+    const panel = screen.getByTestId("entity-panel");
+    expect(panel).toHaveTextContent("Rahul Sharma");
+  });
+
+  it("EntityPanel lists relationships for the selected entity", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+
+    await waitFor(() => {
+      // getEntityRelationships mock returns relationships where ent-001 is source/target
+      expect(screen.getByTestId("relationship-list")).toBeInTheDocument();
+    });
+  });
+
+  it("evidence affordance exists on each relationship in EntityPanel (DOC3 §9.4)", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+
+    await waitFor(() => screen.getByTestId("relationship-list"));
+
+    // Every relationship item must have a View evidence button (DOC3 §9.4)
+    const buttons = screen.getAllByTestId("view-evidence-button");
+    expect(buttons.length).toBeGreaterThan(0);
+  });
+
+  it("clicking 'View evidence' on a relationship expands the EvidencePanel", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+    await waitFor(() => screen.getByTestId("relationship-list"));
+
+    fireEvent.click(screen.getAllByTestId("view-evidence-button")[0]);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("evidence-panel")).toBeInTheDocument();
+    });
+  });
+
+  it("closing EntityPanel via onClose removes it from the DOM", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+    await waitFor(() => screen.getByTestId("entity-panel"));
+
+    // Click the close (✕) button
+    fireEvent.click(screen.getByRole("button", { name: /close entity panel/i }));
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("entity-panel")).not.toBeInTheDocument();
+    });
+  });
+
+  it("tapping the same node again deselects and closes EntityPanel", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001"); // select
+    await waitFor(() => screen.getByTestId("entity-panel"));
+
+    _cytoscapeInstance?.fireTap("node", "ent-001"); // deselect (toggle)
+    await waitFor(() => {
+      expect(screen.queryByTestId("entity-panel")).not.toBeInTheDocument();
+    });
+  });
+
+  it("CaseWorkspace 'Add to case' button appears for selected entity after case is created", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    // Select an entity — this propagates selectedEntityId to CaseWorkspace
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+    await waitFor(() => screen.getByTestId("entity-panel"));
+
+    // Create a case
+    fireEvent.change(screen.getByTestId("case-title-input"), {
+      target: { value: "Operation Apex" },
+    });
+    fireEvent.click(screen.getByTestId("create-case-button"));
+
+    await waitFor(() => {
+      // After case creation, the selectedEntityId=ent-001 is passed to CaseWorkspace
+      // which shows the "Add to case" affordance
+      expect(screen.getByTestId("add-entity-button")).toBeInTheDocument();
+    });
+  });
+
+  it("selecting an edge fires onSelectRelationship and clears entity selection", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    // First select an entity
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+    await waitFor(() => screen.getByTestId("entity-panel"));
+
+    // Then select an edge — entity panel should close
+    _cytoscapeInstance?.fireTap("edge", "rel-001");
+    await waitFor(() => {
+      expect(screen.queryByTestId("entity-panel")).not.toBeInTheDocument();
+    });
+  });
+
+  it("changing a filter clears the entity selection (consistency requirement)", async () => {
+    render(<DashboardPage />);
+    await waitFor(() => screen.getByTestId("network-view"));
+
+    // Select an entity
+    _cytoscapeInstance?.fireTap("node", "ent-001");
+    await waitFor(() => screen.getByTestId("entity-panel"));
+
+    // Apply an entity-type filter — this should clear the selection
+    fireEvent.click(screen.getByTestId("entity-type-toggle-Person"));
+    await waitFor(() => {
+      expect(screen.queryByTestId("entity-panel")).not.toBeInTheDocument();
     });
   });
 });
