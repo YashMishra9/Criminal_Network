@@ -27,8 +27,6 @@
  *   the component never fabricates or summarises beyond what the server returns.
  *
  * Phase 0: mock mode returns MOCK_ASK_RESPONSE_OK.
- * The component also exposes a mock-variant override via `mockResponseStatus`
- * prop so all four states can be tested in isolation (test-only).
  */
 
 import { useState } from "react";
@@ -45,13 +43,6 @@ export interface AskTheNetworkProps {
   dataset?: string;
   /** Active as_of from the Timeline slider — passed through to AskRequest. */
   asOf?: string | null;
-  /**
-   * TEST-ONLY: override which mock AskResponse variant the component renders.
-   * In production, the server determines the variant. Ignored in real mode.
-   * This lets all four variants be exercised in unit tests without re-mocking
-   * the entire api-client.
-   */
-  _testMockStatus?: AskResponse["status"] | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -208,7 +199,6 @@ function NoResultResult({
 export default function AskTheNetwork({
   dataset = "synthetic_demo",
   asOf = null,
-  _testMockStatus = null,
 }: AskTheNetworkProps) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -231,19 +221,6 @@ export default function AskTheNetwork({
         as_of: asOf,
       };
       let result = await ask(req);
-
-      // TEST-ONLY: swap mock response to the requested variant so all four
-      // states can be exercised in unit tests without re-mocking api-client.
-      if (_testMockStatus && _testMockStatus !== result.status) {
-        const { MOCK_ASK_RESPONSE_LLM_UNAVAILABLE,
-                MOCK_ASK_RESPONSE_VALIDATION_FAILED,
-                MOCK_ASK_RESPONSE_NO_RESULT,
-                MOCK_ASK_RESPONSE_OK } = await import("../../lib/mock-data");
-        if (_testMockStatus === "llm_unavailable") result = MOCK_ASK_RESPONSE_LLM_UNAVAILABLE;
-        else if (_testMockStatus === "validation_failed") result = MOCK_ASK_RESPONSE_VALIDATION_FAILED;
-        else if (_testMockStatus === "no_result") result = MOCK_ASK_RESPONSE_NO_RESULT;
-        else if (_testMockStatus === "ok") result = MOCK_ASK_RESPONSE_OK;
-      }
 
       setResponse(result);
     } catch (err) {

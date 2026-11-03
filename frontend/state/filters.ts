@@ -47,8 +47,10 @@ export interface FilterState {
 
   /**
    * Source type filter (e.g. "FIR", "CDR", "transaction").
-   * Applied client-side when filtering entities by their evidence source type.
-   * Empty string means "all sources".
+   * Applied client-side to filter displayed entities/relationships by their
+   * evidence source_type. NOT forwarded as a query parameter to the backend
+   * graph API (DOC3 §12.4 does not define a source_type param). Empty string
+   * means "all sources".
    */
   source_type: string;
 

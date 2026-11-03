@@ -252,13 +252,19 @@ export default function FiltersAndSearch({
         </div>
       </fieldset>
 
-      {/* Source type filter — select dropdown */}
+      {/* Source type filter — select dropdown (client-side filtering only) */}
       <div>
         <label
           htmlFor="filter-source-type"
           className="block text-xs text-slate-400 mb-1"
         >
-          Source type
+          Source type{" "}
+          <span
+            className="text-slate-500 italic font-normal"
+            title="Filters displayed items by evidence source type. This filter is applied locally and is not sent to the backend graph API (DOC3 §12.4)."
+          >
+            (local filter)
+          </span>
         </label>
         <select
           id="filter-source-type"

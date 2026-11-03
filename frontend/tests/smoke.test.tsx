@@ -627,11 +627,13 @@ describe("DashboardPage — GAP-1 integration: NetworkView + EntityPanel + CaseW
       expect(screen.getByTestId("entity-panel")).toBeInTheDocument();
     });
 
-    // Step 2: now the panel is present, confirm it shows the entity's display_name
+    // Step 2: wait for entity details to load and confirm display_name is visible
     // getEntity("ent-001") → MOCK_ENTITIES[0] = Rahul Sharma
     // We query *within* the entity-panel to disambiguate from the entity list row
-    const panel = screen.getByTestId("entity-panel");
-    expect(panel).toHaveTextContent("Rahul Sharma");
+    await waitFor(() => {
+      const panel = screen.getByTestId("entity-panel");
+      expect(panel).toHaveTextContent("Rahul Sharma");
+    });
   });
 
   it("EntityPanel lists relationships for the selected entity", async () => {
