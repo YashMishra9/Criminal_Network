@@ -40,10 +40,8 @@ def test_routers_mounted():
         # graph) are implemented by Task C6 and no longer return HTTP 501.
         # They are tested separately in test_c6_api_endpoints.py.
 
-        # DOC3 §12.5: Analytics
-        ("GET", "/api/v1/analytics"),
-        # DOC3 §12.6: Patterns
-        ("GET", "/api/v1/patterns"),
+        # NOTE: §12.5-12.6 analytics/patterns are implemented by Task D5.
+        # They are tested separately in test_d5_api.py.
         # DOC3 §12.7: Evidence
         ("GET", "/api/v1/evidence"),
         # DOC3 §12.8: Ask

@@ -719,7 +719,30 @@ Response: `{ relationships: (Relationship & { evidence: Evidence[] })[] }`
 Response: `{ entities: CanonicalEntity[], relationships: Relationship[] }` (relationships include `evidence_ids`, not full evidence — fetched separately via 12.7 on demand for performance). `as_of` filtering follows Section 2.4A exactly (entity visibility derived from relationship visibility, plus always-shown isolated entities).
 
 ### 12.5 `GET /analytics?dataset=&as_of=&algorithms=`
-Request maps to `AnalyticsRequest` (Section 7). Response: `AnalyticsResult`.
+This endpoint supports centrality and community analytics only; `shortest_path` is
+served separately by `GET /analytics/shortest-path` below.
+
+- `dataset`: optional; defaults to `synthetic_demo`.
+- `as_of`: optional ISO-8601 timestamp; null means the current graph snapshot.
+- `algorithms`: optional comma-separated subset of `degree`, `betweenness`,
+  `pagerank`, and `community`. If omitted, all four are requested.
+
+The request maps to `AnalyticsRequest` (Section 7) with only the requested
+centrality/community algorithms. Response: `AnalyticsResult` (Section 1.12).
+
+### 12.5A `GET /analytics/shortest-path?dataset=&as_of=&shortest_path_from=&shortest_path_to=`
+Shortest-path computation is a separate endpoint so the required endpoints and
+the response shape are explicit.
+
+- `dataset`: optional; defaults to `synthetic_demo`.
+- `as_of`: optional ISO-8601 timestamp; null means the current graph snapshot.
+- `shortest_path_from`: required entity ID string.
+- `shortest_path_to`: required entity ID string.
+
+The request maps to `AnalyticsRequest` (Section 7) with
+`algorithms: ["shortest_path"]` and the supplied `shortest_path_from` and
+`shortest_path_to`. Response: `ShortestPathResult` (Section 7). The path is
+computed only within the requested dataset and `as_of`-filtered graph snapshot.
 
 ### 12.6 `GET /patterns?dataset=&as_of=`
 Response: `{ findings: Finding[] }` — reads persisted `Finding` nodes (Section 1.8), filtered to those whose subjects are visible at `as_of` per Section 2.4A. Does not trigger a new detection run; detection runs separately (on-demand or scheduled, DOC2 §10) and upserts into the graph.
